@@ -1,4 +1,10 @@
-#pragma once
+#ifndef CHIP8CPU_H
+#define CHIP8CPU_H
+
+#include "Chip8OpTable.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 // Documentazione: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 
@@ -8,8 +14,14 @@
 
 class Chip8CPU {
 	public:
-		Chip8CPU();
+		Chip8CPU(Chip8OpTable t);
 		~Chip8CPU();
+
+		void cycle(); // Emulazione di un ciclo di CPU
+		void fetch_decode();
+		void execute();
+		void loadROM(); // Caricamento ROM in memoria
+		unsigned short getCurrentOpcode();
 
 		/* "The graphics system: The chip 8 has one instruction that draws sprite to the screen. 
 		Drawing is done in XOR mode and if a pixel is turned off as a result of drawing, the VF register is set.
@@ -25,6 +37,8 @@ class Chip8CPU {
 		// e in caso contrario di proseguire con i cycle
 		bool drawReadyFlag;
 
+		Chip8OpTable table;
+
 	private:
 		// Ci sono 35 opcode, tutti da due byte
 		unsigned short opcode;
@@ -35,7 +49,7 @@ class Chip8CPU {
 		// 15 registri general purpose da 8-bit 
 		// che vanno da V0 a VE (esadecimale)
 		unsigned char V[16];
-		// Registro index (12-bit: da 0x000 a 0xFFF)
+		// Registro index (16-bit: da 0x000 a 0xFFFF)
 		unsigned short I;
 		// Program counter (12-bit: da 0x000 a 0xFFF)
 		unsigned short pc;
@@ -53,4 +67,8 @@ class Chip8CPU {
 
 		// Funzione di inizializzazione
 		void init();
+
+		
 };
+
+#endif

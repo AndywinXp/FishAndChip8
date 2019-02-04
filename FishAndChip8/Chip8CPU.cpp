@@ -1,7 +1,4 @@
 #include "Chip8CPU.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 unsigned char charset[80] =
 {
@@ -23,12 +20,39 @@ unsigned char charset[80] =
 	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-Chip8CPU::Chip8CPU()
+
+Chip8CPU::Chip8CPU(Chip8OpTable t)
 {
+	table = t;
+	init();
 }
 
 Chip8CPU::~Chip8CPU()
 {
+}
+
+void Chip8CPU::cycle()
+{
+	// TODO:
+	fetch_decode();
+	execute();
+}
+
+void Chip8CPU::fetch_decode()
+{
+	// Fetch & Decode (16 bit, quindi si shifta a sinistra di 8 bit e si fa l'OR con altri 8 bit)
+	opcode = memory[pc] << 8 | memory[pc + 1];
+}
+
+void Chip8CPU::execute()
+{
+	// Execute
+	table.Chip8Table[(Chip8CPU::getCurrentOpcode() & 0xF000) >> 12](Chip8CPU::getCurrentOpcode());
+}
+
+unsigned short Chip8CPU::getCurrentOpcode()
+{
+	return opcode;
 }
 
 void Chip8CPU::init()

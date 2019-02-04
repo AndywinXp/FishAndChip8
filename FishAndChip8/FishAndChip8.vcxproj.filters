@@ -21,9 +21,15 @@
     <ClCompile Include="Chip8CPU.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="Chip8OpTable.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chip8CPU.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Chip8OpTable.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

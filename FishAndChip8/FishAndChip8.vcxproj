@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Chip8CPU.cpp" />
+    <ClCompile Include="Chip8OpTable.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chip8CPU.h" />
+    <ClInclude Include="Chip8OpTable.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B7421DD7-5A18-4BC8-9183-1AE4E09B926D}</ProjectGuid>
