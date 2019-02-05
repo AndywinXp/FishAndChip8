@@ -1,3 +1,5 @@
+
+
 #include "Chip8CPU.h"
 
 #include <stdio.h>
@@ -17,7 +19,9 @@ void(*Dummy[2])() =
 };
 
 int main() {
+	printf("bubu %d\n", pc);
+	init();
 	Dummy[0+1]();
-	printf("bubu\n");
+	printf("bubu %d\n", pc);
 	getchar();
 }

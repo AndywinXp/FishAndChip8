@@ -1,4 +1,25 @@
+
 #include "Chip8CPU.h"
+
+unsigned char gfx[64 * 32];
+
+unsigned char key[16];
+
+bool drawReadyFlag;
+
+unsigned short opcode;
+unsigned char memory[4096];
+
+// REGISTRI:
+unsigned char V[16];
+unsigned short I;
+
+unsigned short pc;
+
+unsigned short stack[16]; // 16 livelli di stack
+unsigned short sp;
+unsigned short delay_timer;
+unsigned short sound_timer;
 
 unsigned char charset[80] =
 {
@@ -21,41 +42,27 @@ unsigned char charset[80] =
 };
 
 
-Chip8CPU::Chip8CPU(Chip8OpTable t)
-{
-	table = t;
-	init();
-}
 
-Chip8CPU::~Chip8CPU()
-{
-}
-
-void Chip8CPU::cycle()
+void cycle()
 {
 	// TODO:
 	fetch_decode();
 	execute();
 }
 
-void Chip8CPU::fetch_decode()
+void fetch_decode()
 {
 	// Fetch & Decode (16 bit, quindi si shifta a sinistra di 8 bit e si fa l'OR con altri 8 bit)
 	opcode = memory[pc] << 8 | memory[pc + 1];
 }
 
-void Chip8CPU::execute()
+void execute()
 {
 	// Execute
-	table.Chip8Table[(Chip8CPU::getCurrentOpcode() & 0xF000) >> 12](Chip8CPU::getCurrentOpcode());
+	Chip8Table[(opcode & 0xF000) >> 12]();
 }
 
-unsigned short Chip8CPU::getCurrentOpcode()
-{
-	return opcode;
-}
-
-void Chip8CPU::init()
+void init()
 {
 	pc = 0x200; // Il program counter inizia a 0x200 ricordando dalla mappa che da qui inizia la ROM
 	I = 0;
@@ -87,3 +94,4 @@ void Chip8CPU::init()
 
 	drawReadyFlag = true;
 }
+

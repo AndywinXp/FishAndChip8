@@ -29,8 +29,5 @@
     <ClInclude Include="Chip8CPU.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Chip8OpTable.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
