@@ -99,57 +99,65 @@ void OP_00EE()
 
 void OP_1nnn()
 {
-
+	pc = (opcode & 0x0FFF);
 }
 
 void OP_2nnn()
 {
-
+	stack[sp] = pc;
+	sp++;
+	pc += (opcode & 0x0FFF);
 }
 
 void OP_3xkk()
 {
-
+	pc += (V[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF)) ? 4 : 2;
 }
 
 void OP_4xkk()
 {
-
+	pc += (V[(opcode & 0x0F00) >> 8] != (opcode & 0x00FF)) ? 4 : 2;
 }
 
 void OP_5xy0()
 {
-
+	pc += (V[(opcode & 0x0F00) >> 8] == V[(opcode & 0x00F0) >> 4]) ? 4 : 2;
 }
 
 void OP_6xkk()
 {
-
+	V[(opcode & 0x0F00) >> 8] = (opcode & 0x00FF);
+	pc += 2;
 }
 
 void OP_7xkk()
 {
-
+	V[(opcode & 0x0F00) >> 8] += (opcode & 0x00FF);
+	pc += 2;
 }
 
 void OP_8xy0()
 {
-
+	V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4];
+	pc += 2;
 }
 
 void OP_8xy1()
 {
-
+	V[(opcode & 0x0F00) >> 8] |= V[(opcode & 0x00F0) >> 4];
+	pc += 2;
 }
 
 void OP_8xy2()
 {
-
+	V[(opcode & 0x0F00) >> 8] &= V[(opcode & 0x00F0) >> 4];
+	pc += 2;
 }
 
 void OP_8xy3()
 {
-
+	V[(opcode & 0x0F00) >> 8] ^= V[(opcode & 0x00F0) >> 4];
+	pc += 2;
 }
 
 void OP_8xy4()
@@ -179,17 +187,18 @@ void OP_8xyE()
 
 void OP_9xy0()
 {
-
+	pc += (V[(opcode & 0x0F00) >> 8] != V[(opcode & 0x00F0) >> 4]) ? 4 : 2;
 }
 
 void OP_Annn()
 {
-
+	I = (opcode & 0x0FFF);
+	pc += 2;
 }
 
 void OP_Bnnn()
 {
-
+	pc = (opcode & 0x0FFF) + V[0];
 }
 
 void OP_Cxkk()
@@ -214,7 +223,8 @@ void OP_Ex9E()
 
 void OP_Fx07()
 {
-
+	V[(opcode & 0x0F00) >> 8] = delay_timer;
+	pc += 2;
 }
 
 void OP_Fx0A()
@@ -224,12 +234,14 @@ void OP_Fx0A()
 
 void OP_Fx15()
 {
-
+	delay_timer = V[(opcode & 0x0F00) >> 8];
+	pc += 2;
 }
 
 void OP_Fx18()
 {
-
+	sound_timer = V[(opcode & 0x0F00) >> 8];
+	pc += 2;
 }
 
 void OP_Fx1E()

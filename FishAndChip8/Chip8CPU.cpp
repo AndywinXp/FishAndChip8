@@ -6,6 +6,7 @@ unsigned char gfx[64 * 32];
 unsigned char key[16];
 
 bool drawReadyFlag;
+bool soundReady;
 
 unsigned short opcode;
 unsigned char memory[4096];
@@ -48,6 +49,20 @@ void cycle()
 	// TODO:
 	fetch_decode();
 	execute();
+
+	// In realtà dovrebbe scorrere a 60 Hz
+	delay_timer -= (delay_timer > 0) ? 1 : 0;
+	
+	// soundReady è true se sound_timer è 1 (e nel mentre lo decrementa), altrimenti
+	// fa un controllo (che farà comunque risultare soundReady = false) di sound_timer > 0,
+	// e se lo è decrementa il timer, altrimenti non farà nulla.
+	//
+	// Chissà se funziona veramente tutto sto accrocchio per evitare di scrivere mille if
+
+	soundReady = (sound_timer == 1) ? (sound_timer--) : ((sound_timer > 0) ? (sound_timer-- && false) : false);
+
+	if (soundReady)
+		printf("Sound playing\n");
 }
 
 void fetch_decode()
@@ -93,5 +108,6 @@ void init()
 	sound_timer = 0;
 
 	drawReadyFlag = true;
+	soundReady = false;
 }
 
