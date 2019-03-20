@@ -162,27 +162,37 @@ void OP_8xy3()
 
 void OP_8xy4()
 {
-
+	V[0xF] = (V[(opcode & 0x0F00) >> 8] + V[(opcode & 0x00F0) >> 4] > 0xFF) ? 1 : 0;
+	V[(opcode & 0x0F00) >> 8] += V[(opcode & 0x00F0) >> 4];
+	pc += 2;
 }
 
 void OP_8xy5()
 {
-
+	V[0xF] = (V[(opcode & 0x0F00) >> 8] > V[(opcode & 0x00F0) >> 4]) ? 1 : 0;
+	V[(opcode & 0x0F00) >> 8] -= V[(opcode & 0x00F0) >> 4];
+	pc += 2;
 }
 
 void OP_8xy6()
 {
-
+	V[0xF] = V[(opcode & 0x0F00) >> 8] & 0x0001;
+	V[(opcode & 0x0F00) >> 8] >>= 1;
+	pc += 2;
 }
 
 void OP_8xy7()
 {
-
+	V[0xF] = (V[(opcode & 0x00F0) >> 8] > V[(opcode & 0x0F00) >> 4]) ? 1 : 0;
+	V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4] - V[(opcode & 0x0F00) >> 8];
+	pc += 2;
 }
 
 void OP_8xyE()
 {
-
+	V[0xF] = V[(opcode & 0x0F00) >> 8] >> 7;
+	V[(opcode & 0x0F00) >> 8] <<= 1;
+	pc += 2;
 }
 
 void OP_9xy0()
@@ -203,22 +213,24 @@ void OP_Bnnn()
 
 void OP_Cxkk()
 {
-
+	V[(opcode & 0x0F00) >> 8] = (rand() % 0xFF) & (opcode & 0x00FF);
+	pc += 2;
 }
 
 void OP_Dxyn()
 {
-
+	// TODO
+	pc += 2;
 }
 
 void OP_ExA1()
 {
-
+	pc += (key[V[(opcode & 0x0F00) >> 8]] == 0) ? 4 : 2;
 }
 
 void OP_Ex9E()
 {
-
+	pc += (key[V[(opcode & 0x0F00) >> 8]] != 0) ? 4 : 2;
 }
 
 void OP_Fx07()
@@ -229,7 +241,20 @@ void OP_Fx07()
 
 void OP_Fx0A()
 {
+	bool isKeyPressed = false;
 
+	for (int i = 0; i < 16; i++) {
+		if (key[i] != 0) {
+			V[(opcode & 0x0F00) >> 8] = i;
+			isKeyPressed = true;
+			break; // Interrompo il for al primo tasto trovato
+		}
+	}
+
+	if (!isKeyPressed)
+		return; // Perché così ripeto il cycle
+
+	pc += 2;
 }
 
 void OP_Fx15()
@@ -246,25 +271,40 @@ void OP_Fx18()
 
 void OP_Fx1E()
 {
-
+	V[0xF] = (I + V[(opcode & 0x0F00) >> 8] > 0xFFF) ? 1 : 0;
+	I += V[(opcode & 0x0F00) >> 8];
+	pc += 2;
 }
 
 void OP_Fx29()
 {
-
+	// Moltiplico per 0x5 per raggiungere il carattere corrispondente
+	I = V[(opcode & 0x0F00) >> 8] * 0x5; 
+	pc += 2;
 }
 
 void OP_Fx33()
 {
-
+	memory[I] = V[(opcode & 0x0F00) >> 8] / 100;
+	memory[I + 1] = (V[(opcode & 0x0F00) >> 8] / 10) % 10;
+	memory[I + 2] = (V[(opcode & 0x0F00) >> 8] % 100) % 10;
+	pc += 2;
 }
 
 void OP_Fx55()
 {
+	for (int i = 0; i <= ((opcode & 0x0F00) >> 8); i++) {
+		memory[I + i] = V[i];
+	}
 
+	pc += 2;
 }
 
 void OP_Fx65()
 {
+	for (int i = 0; i <= ((opcode & 0x0F00) >> 8); i++) {
+		V[i] = memory[I + i];
+	}
 
+	pc += 2;
 }
